@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>bruh chat</title>
+        <link rel="stylesheet" href="style.css" />
+        <script src="app.js" defer></script>
+    </head>
+    <body>
+        <header>
+            <h1>bruh chat</h1>
+            <h3 style="display: none">Logged in as <span id="username"></span></h3>
+            <a id="login-button" href="/login">Login</a>
+            <a id="logout-button" onclick="localStorage.removeItem('token')" href="/login" style="display: none">Log Out</a>
+        </header>
+        <div id="messages"></div>
+        <form id="message-form">
+            <input type="text" id="message-input" />
+        </form>
+    </body>
+</html>
