@@ -31,7 +31,7 @@ ws.onmessage = (event) => {
 messageForm.onsubmit = (event) => {
     event.preventDefault(); // Prevent page refresh
 
-    const message = messageInput.value;
+    const message = messageInput.value.trim();
     messageInput.value = "";
 
     if (message) sendMessage(message);

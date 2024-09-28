@@ -6,7 +6,7 @@ const confirmPasswordInput = document.querySelector("#confirm-password-input");
 registerForm.onsubmit = (event) => {
     event.preventDefault();
 
-    const username = usernameInput.value;
+    const username = usernameInput.value.trim();
     const password = passwordInput.value;
 
     if (!username || !password) {

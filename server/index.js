@@ -58,12 +58,12 @@ app.get("/api/me", async (req, res) => {
 app.post("/api/register", async (req, res) => {
     const { username, password } = req.body;
 
-    if (!username || !password) {
+    if (!username.trim() || !password) {
         res.sendStatus(400);
         return;
     }
 
-    const existingUser = await users.findOne({ username });
+    const existingUser = await users.findOne({ username: username.trim() });
     if (existingUser) {
         res.json({ error: "Username is taken." });
         return;
@@ -72,8 +72,8 @@ app.post("/api/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const token = uuidv4();
 
-    await users.insertOne({ username, password: hashedPassword, token });
-    console.log(`User ${username} has been registered.`);
+    await users.insertOne({ username: username.trim(), password: hashedPassword, token });
+    console.log(`User ${username.trim()} has been registered.`);
     res.status(201).json({ token });
 });
 
@@ -108,7 +108,7 @@ app.post("/api/message", async (req, res) => {
     const { content } = req.body;
     const token = req.headers.authorization;
 
-    if (!token || !content) {
+    if (!token || !content.trim()) {
         res.sendStatus(400);
         return;
     }
@@ -119,7 +119,7 @@ app.post("/api/message", async (req, res) => {
         return;
     }
 
-    broadcastMessage(content, user.username);
+    broadcastMessage(content.trim(), user.username);
     res.sendStatus(200);
 });
 
