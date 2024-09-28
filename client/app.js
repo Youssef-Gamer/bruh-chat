@@ -62,6 +62,8 @@ function receiveMessage(message) {
     // Only show the owner's username if it's different from the previous message's owner.
     // - Copium
     if (owner !== lastMessageOwner) {
+        messageElement.style.marginTop = "12px";
+        
         // username h3
         const usernameElement = document.createElement("h3");
         usernameElement.textContent = owner;
