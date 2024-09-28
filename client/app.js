@@ -64,6 +64,12 @@ function receiveMessage(message) {
     if (owner !== lastMessageOwner) {
         messageElement.style.marginTop = "12px";
         
+        // profile picture
+        const profileElement = document.createElement("img");
+        profileElement.classList.add("pfp");
+        profileElement.src = `static/unknown-pfp.png`;
+        messageElement.appendChild(profileElement);
+
         // username h3
         const usernameElement = document.createElement("h3");
         usernameElement.textContent = owner;

@@ -33,16 +33,26 @@ h1 {
 .message {
     display: flex;
     flex-direction: column;
+    margin-left: 60px;
 }
 
 .message * {
     margin: 0;
 }
 
+.pfp {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    position: absolute;
+    left: 12px;
+    margin-top: 6px;
+}
+
 #messages {
     list-style-type: none;
     padding: 0;
-    margin-inline-start: 12px;
+    margin-left: 12px;
 }
 
 #messages div {
