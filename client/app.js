@@ -67,7 +67,7 @@ function receiveMessage(message) {
         // profile picture
         const profileElement = document.createElement("img");
         profileElement.classList.add("pfp");
-        profileElement.src = `static/unknown-pfp.png`;
+        profileElement.src = "static/unknown-pfp.png";
         messageElement.appendChild(profileElement);
 
         // username h3
