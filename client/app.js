@@ -15,7 +15,7 @@ if (token) {
 } else {
     // set the message input the disabled
     messageInput.disabled = true;
-    messageInput.placeholder = "Please login to send messages";
+    messageInput.placeholder = "You must be logged in to send messages!";
 }
 
 const ip = "ws://192.168.1.94:3001";
