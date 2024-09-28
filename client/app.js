@@ -4,6 +4,8 @@ const messageList = document.querySelector("#messages");
 
 const token = localStorage.getItem("token");
 
+let lastMessageOwner;
+
 if (token) {
     document.querySelector("#login-button").style.display = "none";
     document.querySelector("#logout-button").style.display = "";
@@ -23,7 +25,7 @@ const ws = new WebSocket(ip);
 
 ws.onmessage = (event) => {
     const message = event.data;
-    receiveMessage(message);
+    receiveMessage(JSON.parse(message));
 };
 
 messageForm.onsubmit = (event) => {
@@ -49,9 +51,29 @@ async function getUsername() {
 }
 
 function receiveMessage(message) {
+    const { message: content, owner } = message;
+
+    // root div
     const messageElement = document.createElement("div");
-    messageElement.textContent = message;
+    messageElement.classList.add("message");
     messageList.appendChild(messageElement);
+
+    // We don't want to repeat the owner's username for every single message they send.
+    // Only show the owner's username if it's different from the previous message's owner.
+    // - Copium
+    if (owner !== lastMessageOwner) {
+        // username h3
+        const usernameElement = document.createElement("h3");
+        usernameElement.textContent = owner;
+        usernameElement.classList.add("username");
+        messageElement.appendChild(usernameElement);
+    }
+    lastMessageOwner = owner;
+    // message span
+    const messageContentElement = document.createElement("span");
+    messageContentElement.textContent = content;
+    messageContentElement.classList.add("message-content");
+    messageElement.appendChild(messageContentElement);
 }
 
 function sendMessage(message) {

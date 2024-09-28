@@ -31,10 +31,10 @@ wss.on("connection", (ws) => {
     });
 });
 
-function broadcastMessage(message) {
+function broadcastMessage(message, owner) {
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
-            client.send(message);
+            client.send(JSON.stringify({ message, owner }));
         }
     });
 }
@@ -119,7 +119,7 @@ app.post("/api/message", async (req, res) => {
         return;
     }
 
-    broadcastMessage(`${user.username}: ${content}`);
+    broadcastMessage(content, user.username);
     res.sendStatus(200);
 });
 
