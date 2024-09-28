@@ -28,6 +28,7 @@ header * {
 
 h1 {
     flex-grow: 1;
+    white-space: nowrap;
 }
 
 .message {
@@ -47,6 +48,10 @@ h1 {
     position: absolute;
     left: 12px;
     margin-top: 6px;
+}
+
+#login-status {
+    word-wrap: break-word;
 }
 
 #messages {
@@ -105,6 +110,7 @@ h1 {
     font-size: 1.125rem;
     padding: 0.5rem 1rem;
     outline: none;
+    white-space: nowrap;
 }
 
 #logout-button:hover {

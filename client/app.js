@@ -6,22 +6,22 @@ const token = localStorage.getItem("token");
 
 let lastMessageOwner;
 
+const ip = "ws://192.168.1.94:3001";
+const ws = new WebSocket(ip);
+
 if (token) {
     document.querySelector("#login-button").style.display = "none";
     document.querySelector("#logout-button").style.display = "";
 
     getUsername().then((username) => {
         document.querySelector("#username").textContent = username;
-        document.querySelector("h3").style.display = "";
+        document.querySelector("#login-status").style.display = "";
     });
 } else {
     // set the message input the disabled
     messageInput.disabled = true;
     messageInput.placeholder = "You must be logged in to send messages!";
 }
-
-const ip = "ws://192.168.1.94:3001";
-const ws = new WebSocket(ip);
 
 ws.onmessage = (event) => {
     const message = event.data;
@@ -63,7 +63,7 @@ function receiveMessage(message) {
     // - Copium
     if (owner !== lastMessageOwner) {
         messageElement.style.marginTop = "12px";
-        
+
         // profile picture
         const profileElement = document.createElement("img");
         profileElement.classList.add("pfp");
