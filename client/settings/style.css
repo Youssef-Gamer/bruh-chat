@@ -1,0 +1,35 @@
+* {
+    box-sizing: border-box;
+    font-family: system-ui, sans-serif;
+    color: #cccccc;
+    scrollbar-color: #525252 #2a2a2a;
+}
+
+a {
+    color: #0078d4;
+}
+
+body {
+    color-scheme: dark;
+    background-color: #181818;
+}
+
+#update-button {
+    margin-top: 12px;
+}
+
+button {
+    background-color: #0078d4;
+    color: white;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 1.125rem;
+    padding: 0.5rem 1rem;
+    outline: none;
+}
+
+button:hover {
+    background-color: #026ec1;
+}

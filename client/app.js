@@ -50,7 +50,7 @@ async function getUsername() {
     return data.username;
 }
 
-function receiveMessage(message) {
+async function receiveMessage(message) {
     const { message: content, owner } = message;
 
     // root div
@@ -64,11 +64,17 @@ function receiveMessage(message) {
     if (owner !== lastMessageOwner) {
         messageElement.style.marginTop = "12px";
 
-        // profile picture
-        const profileElement = document.createElement("img");
-        profileElement.classList.add("pfp");
-        profileElement.src = "static/unknown-pfp.png";
-        messageElement.appendChild(profileElement);
+        // avatar
+        const avatarElement = document.createElement("img");
+        avatarElement.classList.add("avatar");
+        const response = await fetch(`http://192.168.1.94:3000/api/avatar?username=${owner}`);
+        const blob = await response.blob();
+        console.log(blob);
+        const imageUrl = (blob.size > 0)
+            ? URL.createObjectURL(blob)
+            : "static/unknown-avatar.png"; // if the image doesn't exist, use the default image
+        avatarElement.src = imageUrl;
+        messageElement.appendChild(avatarElement);
 
         // username h3
         const usernameElement = document.createElement("h3");
@@ -82,7 +88,7 @@ function receiveMessage(message) {
     messageContentElement.textContent = content;
     messageContentElement.classList.add("message-content");
     messageElement.appendChild(messageContentElement);
-}
+} 
 
 function sendMessage(message) {
     fetch("http://192.168.1.94:3000/api/message", {

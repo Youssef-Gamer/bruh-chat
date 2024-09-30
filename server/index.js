@@ -1,13 +1,22 @@
+const fs = require("fs");
 const express = require("express");
+const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const WebSocket = require("ws");
 const bcrypt = require("bcrypt");
 const { MongoClient } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
+const sharp = require("sharp");
 
 const app = express();
 const port = 3000;
 
+app.use(
+    fileUpload({
+        limits: { fileSize: 30_000_000 }, // No more than 30 MB
+        abortOnLimit: true
+    })
+);
 app.use(express.json());
 app.use(cors());
 
@@ -39,63 +48,99 @@ function broadcastMessage(message, owner) {
     });
 }
 
-app.get("/api/me", async (req, res) => {
+app.delete("/api/avatar", async (req, res) => {
     const token = req.headers.authorization;
-    if (!token) {
-        res.sendStatus(401);
-        return;
-    }
+    if (!token) return res.sendStatus(401);
 
     const user = await users.findOne({ token });
-    if (!user) {
-        res.sendStatus(401);
-        return;
+    if (!user) return res.sendStatus(401);
+
+    if (fs.existsSync(`./avatars/${user.username}.webp`)) {
+        fs.rmSync(`./avatars/${user.username}.webp`);
     }
+    res.sendStatus(200);
+});
+
+app.get("/api/avatar", async (req, res) => {
+    const { username } = req.query;
+    if (!username) return res.sendStatus(400);
+
+    if (!fs.existsSync(`./avatars/${username}.webp`)) {
+        return res.sendStatus(204);
+    }
+    const avatar = await sharp(`./avatars/${username}.webp`).toBuffer();
+    res.send(avatar);
+});
+
+app.post("/api/avatar/update", async (req, res) => {
+    const token = req.headers.authorization;
+    if (!token) return res.sendStatus(401);
+
+    const user = await users.findOne({ token });
+    if (!user) return res.sendStatus(401);
+
+    const { image } = req.files;
+    if (!image) return res.sendStatus(400);
+
+    if (!/^image/.test(image.mimetype)) return res.sendStatus(400); // Only accept image files
+
+    console.log(image);
+
+    if (image.size > 500_000) return res.sendStatus(413); // No more than 500 Kilobytes
+
+    const webpImage = await sharp(image.data).webp().toBuffer();
+
+    await sharp(webpImage).toFile(`./avatars/${user.username}.webp`);
+
+    res.sendStatus(200);
+});
+
+app.get("/api/me", async (req, res) => {
+    const token = req.headers.authorization;
+    if (!token) return res.sendStatus(401);
+
+    const user = await users.findOne({ token });
+    if (!user) return res.sendStatus(401);
 
     res.json({ username: user.username });
 });
 
 app.post("/api/register", async (req, res) => {
     const { username, password } = req.body;
+    if (!username.trim() || !password) return res.sendStatus(400);
 
-    if (!username.trim() || !password) {
-        res.sendStatus(400);
-        return;
-    }
-
-    const existingUser = await users.findOne({ username: username.trim() });
-    if (existingUser) {
-        res.json({ error: "Username is taken." });
-        return;
-    }
+    const existingUser = await users.findOne({
+        username: username.trim()
+    });
+    if (existingUser) return res.json({ error: "Username is taken." });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const token = uuidv4();
 
-    await users.insertOne({ username: username.trim(), password: hashedPassword, token });
+    await users.insertOne({
+        username: username.trim(),
+        password: hashedPassword,
+        token
+    });
     console.log(`User ${username.trim()} has been registered.`);
     res.status(201).json({ token });
 });
 
 app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
-
-    if (!username || !password) {
-        res.sendStatus(400);
-        return;
-    }
+    if (!username || !password) return res.sendStatus(400);
 
     const user = await users.findOne({ username });
-    if (!user) {
-        res.status(200).json({ error: "Username or password is incorrect." });
-        return;
-    }
+    if (!user)
+        return res.status(401).json({
+            error: "Username or password is incorrect."
+        });
 
     const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-        res.status(200).json({ error: "Username or password is incorrect." });
-        return;
-    }
+    if (!passwordMatch)
+        return res.status(200).json({
+            error: "Username or password is incorrect."
+        });
 
     // Username and password are correct, so generate a new token
     const newToken = uuidv4();
@@ -106,18 +151,12 @@ app.post("/api/login", async (req, res) => {
 
 app.post("/api/message", async (req, res) => {
     const { content } = req.body;
-    const token = req.headers.authorization;
 
-    if (!token || !content.trim()) {
-        res.sendStatus(400);
-        return;
-    }
+    const token = req.headers.authorization;
+    if (!token || !content.trim()) return res.sendStatus(400);
 
     const user = await users.findOne({ token });
-    if (!user) {
-        res.sendStatus(401);
-        return;
-    }
+    if (!user) return res.sendStatus(401);
 
     broadcastMessage(content.trim(), user.username);
     res.sendStatus(200);

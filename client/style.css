@@ -41,13 +41,28 @@ h1 {
     margin: 0;
 }
 
-.pfp {
+.avatar {
     width: 48px;
     height: 48px;
     border-radius: 50%;
     position: absolute;
     left: 12px;
     margin-top: 8px;
+}
+
+#settings-button {
+    width: 32px;
+    height: 32px;
+}
+
+#settings-icon {
+    width: 32px;
+    height: 32px;
+}
+
+#settings-icon:hover {
+    animation: spin 1s ease-in-out;
+    cursor: pointer;
 }
 
 #login-status {

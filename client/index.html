@@ -5,12 +5,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>bruh chat</title>
         <link rel="stylesheet" href="style.css" />
+        <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
         <script src="app.js" defer></script>
     </head>
     <body>
         <header>
             <h1>bruh chat</h1>
             <h3 id="login-status" style="display: none">Logged in as <span id="username"></span></h3>
+            <a href="/settings" id="settings-button">
+                <box-icon id="settings-icon" type="regular" name="cog" color="#cccccc"></box-icon>
+            </a>
             <a id="login-button" href="/login">Login</a>
             <a id="logout-button" onclick="localStorage.removeItem('token')" href="/login" style="display: none">Log Out</a>
         </header>

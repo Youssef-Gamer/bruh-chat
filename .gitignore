@@ -1,2 +1,5 @@
 # node modules singularity
 server/node_modules
+
+# avatars real
+server/avatars/*
