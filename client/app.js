@@ -6,7 +6,7 @@ const token = localStorage.getItem("token");
 
 let lastMessageOwner;
 
-const ip = "ws://192.168.1.94:3001";
+const ip = "ws://192.168.1.152:3001";
 const ws = new WebSocket(ip);
 
 if (token) {
@@ -38,7 +38,7 @@ messageForm.onsubmit = (event) => {
 };
 
 async function getUsername() {
-    const response = await fetch("http://192.168.1.94:3000/api/me", {
+    const response = await fetch("http://192.168.1.152:3000/api/me", {
         method: "GET",
         mode: "cors",
         headers: {
@@ -67,7 +67,7 @@ async function receiveMessage(message) {
         // avatar
         const avatarElement = document.createElement("img");
         avatarElement.classList.add("avatar");
-        const response = await fetch(`http://192.168.1.94:3000/api/avatar?username=${owner}`);
+        const response = await fetch(`http://192.168.1.152:3000/api/avatar?username=${owner}`);
         const blob = await response.blob();
         console.log(blob);
         const imageUrl = (blob.size > 0)
@@ -91,7 +91,7 @@ async function receiveMessage(message) {
 } 
 
 function sendMessage(message) {
-    fetch("http://192.168.1.94:3000/api/message", {
+    fetch("http://192.168.1.152:3000/api/message", {
         method: "POST",
         mode: "cors",
         headers: {

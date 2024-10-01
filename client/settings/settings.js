@@ -28,7 +28,7 @@ updateButton.addEventListener("click", async () => {
 
     // Send a request to the server with the uploaded image
     try {
-        const response = await fetch("http://192.168.1.94:3000/api/avatar/update", {
+        const response = await fetch("http://192.168.1.152:3000/api/avatar/update", {
             method: "POST",
             mode: "cors",
             enctype: "multipart/form-data",
@@ -50,7 +50,7 @@ updateButton.addEventListener("click", async () => {
 removeAvatarButton.addEventListener("click", async () => {
     if (!confirm("Are you sure you want to remove your avatar?")) return;
     
-    const response = await fetch("http://192.168.1.94:3000/api/avatar", {
+    const response = await fetch("http://192.168.1.152:3000/api/avatar", {
         method: "DELETE",
         mode: "cors",
         headers: { Authorization: token }

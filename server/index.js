@@ -56,7 +56,7 @@ app.delete("/api/avatar", async (req, res) => {
     if (!user) return res.sendStatus(401);
 
     if (fs.existsSync(`./avatars/${user.username}.webp`)) {
-        fs.rmSync(`./avatars/${user.username}.webp`);
+        fs.unlinkSync(`./avatars/${user.username}.webp`);
     }
     res.sendStatus(200);
 });
