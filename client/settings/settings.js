@@ -1,4 +1,3 @@
-// Get the update button and the file input
 const updateButton = document.querySelector("#update-button");
 const removeAvatarButton = document.querySelector("#remove-avatar-button");
 const fileInput = document.querySelector("#avatar-input");
