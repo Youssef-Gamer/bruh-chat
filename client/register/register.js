@@ -23,7 +23,7 @@ registerForm.onsubmit = (event) => {
 };
 
 async function register(username, password) {
-    const response = await fetch("http://192.168.1.152:3000/api/register", {
+    const response = await fetch("http://192.168.1.94:3000/api/register", {
         method: "POST",
         mode: "cors",
         headers: { "Content-Type": "application/json" },
